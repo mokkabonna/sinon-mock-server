@@ -101,6 +101,7 @@ describe('createServer', function() {
   describe('post headers', function() {
     it('supports sinon matchers', function() {
       server.post('/api/test', null, {
+        accept: sinon.match('json'),
         'content-type': sinon.match('application/json')
       }).resolve(201, {})
 
@@ -123,21 +124,41 @@ describe('createServer', function() {
       })
     })
 
-    it('matches strictly incoming body', function() {
-      var endpoint = server.post('/api/test', {
+    it('matches strictly incoming body as string', function() {
+      server.post('/api/test', 'somebody').resolve(201, {})
+
+      var stub = sinon.stub()
+
+      return axios.post('/api/test', 'suppliedbody').catch(function (err) {
+        expect(err.message).to.match(/Required:somebody/)
+        expect(err.message).to.match(/Actual:suppliedbody/)
+        stub()
+      }).then(function() {
+        sinon.assert.calledOnce(stub)
+      })
+    })
+
+    it('matches strictly incoming body as json', function() {
+      var requiredBody = {
         suppliedParam: 3,
         requiredBodyParam: 3
-      }).resolve(201, {})
-
-      axios.post('/api/test', {
+      }
+      var suppliedBody = {
         suppliedParam: 3
-      }).then(function() {
-        throw new Error('SHOULD NOT RESPOND')
-      }, function() {
-        throw new Error('SHOULD NOT RESPOND')
-      })
+      }
+      server.post('/api/test', requiredBody).resolve(201, {})
 
-      sinon.assert.notCalled(endpoint)
+      var stub = sinon.stub()
+
+      return axios.post('/api/test', suppliedBody).catch(function (err) {
+        expect(err.message).to.match(/Required:/)
+        expect(err.message).to.match(/suppliedParam/)
+        expect(err.message).to.match(/requiredBodyParam/)
+        expect(err.message).to.match(/Actual:/)
+        stub()
+      }).then(function() {
+        sinon.assert.calledOnce(stub)
+      })
     })
 
     it('call stub async', function(done) {
