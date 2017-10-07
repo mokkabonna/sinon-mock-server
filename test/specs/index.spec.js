@@ -7,7 +7,7 @@ var expect = chai.expect
 describe('createServer', function() {
   var server
   beforeEach(function() {
-    server = mockServer.createServer()
+    server = mockServer()
   })
 
   afterEach(function() {
