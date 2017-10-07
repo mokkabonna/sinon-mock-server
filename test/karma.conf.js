@@ -1,3 +1,4 @@
+var path = require('path')
 module.exports = function(config) {
   config.set({
     basePath: '../',
@@ -8,7 +9,21 @@ module.exports = function(config) {
     frameworks: ['mocha', 'sinon-chai'],
     reporters: ['spec', 'coverage'],
     preprocessors: {
-      'test/index.js': ['webpack', 'coverage']
+      'test/index.js': ['webpack']
+    },
+    webpack: {
+      module: {
+        rules: [
+          // instrument only testing sources with Istanbul
+          {
+            test: /\.js$/,
+            use: {
+              loader: 'istanbul-instrumenter-loader'
+            },
+            include: path.resolve('lib/')
+          }
+        ]
+      }
     },
     coverageReporter: {
       // specify a common output directory
