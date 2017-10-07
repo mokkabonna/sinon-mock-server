@@ -1,4 +1,5 @@
-# sinon-mock-server
+# sinon-mock-server [![Build Status](https://travis-ci.org/mokkabonna/sinon-mock-server.svg?branch=master)](https://travis-ci.org/mokkabonna/sinon-mock-server)
+
 
 > A more elegant mock server based on sinon fake server
 
