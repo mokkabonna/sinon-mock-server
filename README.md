@@ -138,6 +138,18 @@ If the body is an array or an object it will automatically be serialized to JSON
 
 For incoming requests the request body is parsed to JSON if the content-type in the request headers contains `application/json`.
 
+## catch all 404
+
+If an url is called and you don't have an matching endpoint defined the server will throw an error **GET /api/not-existing: No such endpoint registered.**
+
+This is to help with testing. If you want to respond with something for all urls then register a catch all endpoint:
+
+```js
+server.any(/.*/).rejects(404, 'Route not found')
+```
+
+Be aware that routes are matched in order. So make sure to add this endpoint last.
+
 
 ## Contributing
 
