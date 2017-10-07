@@ -68,7 +68,7 @@ restores the server
 
 ### verbs
 
-The server will have methods for the following vergs: get, post, put, patch, delete, head, options which can be used in the following way:
+The server will have methods for the following verbs: get, post, put, patch, delete, head, options which can be used in the following way:
 
 `server.post(url, [requiredBody], [requiredHeaders])`
 
