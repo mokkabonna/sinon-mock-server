@@ -11,8 +11,15 @@ module.exports = function(config) {
       'test/index.js': ['webpack', 'coverage']
     },
     coverageReporter: {
-      type: 'lcov',
-      dir: 'coverage/'
+      // specify a common output directory
+      dir: '/coverage',
+      reporters: [{
+        type: 'lcov',
+        subdir: function() {
+          return '.'
+        },
+        file: 'lcov.info'
+      }]
     }
   })
 }

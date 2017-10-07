@@ -1,4 +1,4 @@
-# sinon-mock-server [![Build Status](https://travis-ci.org/mokkabonna/sinon-mock-server.svg?branch=master)](https://travis-ci.org/mokkabonna/sinon-mock-server)
+# sinon-mock-server [![Build Status](https://travis-ci.org/mokkabonna/sinon-mock-server.svg?branch=master)](https://travis-ci.org/mokkabonna/sinon-mock-server) [![Coverage Status](https://coveralls.io/repos/github/mokkabonna/sinon-mock-server/badge.svg?branch=master)](https://coveralls.io/github/mokkabonna/sinon-mock-server?branch=master)
 
 
 > A more elegant mock server based on sinon fake server
