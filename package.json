@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "eslint lib test && karma start test/karma.conf.js --single-run",
+    "test": "eslint lib test && karma start test/karma.conf.js --single-run && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "develop": "karma start test/karma.conf.js --watch"
   },
   "repository": {
