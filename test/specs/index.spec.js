@@ -26,6 +26,22 @@ describe('createServer', function() {
     })
   })
 
+  it('supports null body as sinon.match.any', function() {
+    server.any('/', null, {
+      accept: sinon.match('json')
+    }).resolves(200, {
+      test: 5
+    })
+
+    return axios.post('/foo', {
+      supplied: true
+    }).then(function(response) {
+      expect(response.data).to.eql({
+        test: 5
+      })
+    })
+  })
+
   it('supports strict matching', function() {
     server.any.strict('/').resolves(200, {
       test: 5
@@ -34,7 +50,7 @@ describe('createServer', function() {
     var stub = sinon.stub()
     var catchStub = sinon.stub()
 
-    return axios.get('/not registered').then(stub).catch(catchStub).then(function () {
+    return axios.get('/not registered').then(stub).catch(catchStub).then(function() {
       sinon.assert.notCalled(stub)
       sinon.assert.calledOnce(catchStub)
     })
@@ -80,6 +96,97 @@ describe('createServer', function() {
     })
   })
 
+  describe('resolves', function() {
+    it('supports body only', function() {
+      var body = {
+        test: 7
+      }
+      server.get('/').rejects(body)
+
+      var stub = sinon.stub()
+
+      return axios.get('/').catch(function(err) {
+        stub()
+        return err.response
+      }).then(function(response) {
+        sinon.assert.calledOnce(stub)
+        expect(response.status).to.eql(500)
+        expect(response.data).to.eql(body)
+        expect(response.headers).to.eql({
+          'content-type': 'application/json; charset=utf-8'
+        })
+      })
+    })
+  })
+
+  describe('resolves', function() {
+    it('supports body only', function() {
+      var body = {
+        test: 7
+      }
+      server.get('/').resolves(body)
+
+      return axios.get('/').then(function(response) {
+        expect(response.status).to.eql(200)
+        expect(response.data).to.eql(body)
+        expect(response.headers).to.eql({
+          'content-type': 'application/json; charset=utf-8'
+        })
+      })
+    })
+
+    it('supports body and headers only', function() {
+      var body = {
+        test: 7
+      }
+      server.get('/').resolves(body, {
+        'x-meta': 'metainfo'
+      })
+
+      return axios.get('/').then(function(response) {
+        expect(response.status).to.eql(200)
+        expect(response.data).to.eql(body)
+        expect(response.headers).to.eql({
+          'x-meta': 'metainfo',
+          'content-type': 'application/json; charset=utf-8'
+        })
+      })
+    })
+
+    it('supports status and body', function() {
+      var body = {
+        test: 7
+      }
+      server.get('/').resolves(201, body)
+
+      return axios.get('/').then(function(response) {
+        expect(response.status).to.eql(201)
+        expect(response.data).to.eql(body)
+        expect(response.headers).to.eql({
+          'content-type': 'application/json; charset=utf-8'
+        })
+      })
+    })
+
+    it('supports status, body and headers', function() {
+      var body = {
+        test: 7
+      }
+      server.get('/').resolves(204, body, {
+        'x-meta': 'metainfo'
+      })
+
+      return axios.get('/').then(function(response) {
+        expect(response.status).to.eql(204)
+        expect(response.data).to.eql(body)
+        expect(response.headers).to.eql({
+          'x-meta': 'metainfo',
+          'content-type': 'application/json; charset=utf-8'
+        })
+      })
+    })
+  })
+
   describe('get', function() {
     it('registers a handler for a GET request', function() {
       server.get('/api/test').resolves(200, {
@@ -100,7 +207,7 @@ describe('createServer', function() {
       })
 
       return axios.get('/api/test').then(function(response) {
-        expect(response.headers['content-type']).to.eql('application/json')
+        expect(response.headers['content-type']).to.eql('application/json; charset=utf-8')
       })
     })
 
@@ -155,7 +262,7 @@ describe('createServer', function() {
 
       var stub = sinon.stub()
 
-      return axios.post('/api/test', 'suppliedbody').catch(function (err) {
+      return axios.post('/api/test', 'suppliedbody').catch(function(err) {
         expect(err.message).to.match(/Required:.+somebody/)
         expect(err.message).to.match(/Actual:suppliedbody/)
         stub()
@@ -176,7 +283,7 @@ describe('createServer', function() {
 
       var stub = sinon.stub()
 
-      return axios.post('/api/test', suppliedBody).catch(function (err) {
+      return axios.post('/api/test', suppliedBody).catch(function(err) {
         expect(err.message).to.match(/Required:/)
         expect(err.message).to.match(/suppliedParam/)
         expect(err.message).to.match(/requiredBodyParam/)

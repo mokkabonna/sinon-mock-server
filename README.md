@@ -99,3 +99,40 @@ Url also supports regex matching:
 ```js
 server.post(/books/)
 ```
+
+These methods will return a sinon stub that you can perform normal sinon assertions on, like:
+
+```js
+var endpoint = server.post('/books').resolves({})
+mymodule.createBook('new book').then(function () {
+  sinon.assert.calledOnce(endpoint)
+  sinon.assert.calledWithMatch(endpoint, 'POST', '/books', {
+    title: 'new Book'
+  }, {
+    'accept': sinon.match('json')
+  })
+})
+```
+
+The stub is called like this:
+
+`stub(method, url, requestBody, requestHeaders)`
+
+Headers names are normalized (lowercased) before being called.
+
+The stub also have the methods `resolves` and `rejects` on them that you can use to define success and failure responses.
+
+They take these parameters:
+
+```js
+resolves(responseBody) // default status 200
+resolves(responseBody, responseHeaders) // default status 200
+resolves(statusCode, responseBody)
+resolves(statusCode, responseBody, responseHeaders)
+
+// same with rejects but default status is 500
+```
+
+If the body is an array or an object it will automatically be serialized to JSON and the header `content-type: application/json; charset=utf-8` will be set, unless the content-type header is already present in the responseHeaders.
+
+For incoming requests the request body is parsed to JSON if the content-type in the request headers contains `application/json`.
