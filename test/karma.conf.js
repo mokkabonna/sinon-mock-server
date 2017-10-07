@@ -12,7 +12,7 @@ module.exports = function(config) {
     },
     coverageReporter: {
       // specify a common output directory
-      dir: '/coverage',
+      dir: 'coverage',
       subdir: function() {
         return '.'
       },
