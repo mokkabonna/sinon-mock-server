@@ -13,11 +13,11 @@ module.exports = function(config) {
     coverageReporter: {
       // specify a common output directory
       dir: '/coverage',
+      subdir: function() {
+        return '.'
+      },
       reporters: [{
         type: 'lcov',
-        subdir: function() {
-          return '.'
-        },
         file: 'lcov.info'
       }]
     }
