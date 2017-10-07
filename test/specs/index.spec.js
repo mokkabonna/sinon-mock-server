@@ -14,6 +14,32 @@ describe('createServer', function() {
     server.restore()
   })
 
+  it('supports any method', function() {
+    server.any('/').resolve(200, {
+      test: 5
+    })
+
+    return axios.get('/foo').then(function(response) {
+      expect(response.data).to.eql({
+        test: 5
+      })
+    })
+  })
+
+  it('supports strict matching', function() {
+    server.any.strict('/').resolve(200, {
+      test: 5
+    })
+
+    var stub = sinon.stub()
+    var catchStub = sinon.stub()
+
+    return axios.get('/not registered').then(stub).catch(catchStub).then(function () {
+      sinon.assert.notCalled(stub)
+      sinon.assert.calledOnce(catchStub)
+    })
+  })
+
   it('supports matching on regexp', function() {
     server.use('*', /.*/).resolve(200, {
       test: 5
@@ -130,7 +156,7 @@ describe('createServer', function() {
       var stub = sinon.stub()
 
       return axios.post('/api/test', 'suppliedbody').catch(function (err) {
-        expect(err.message).to.match(/Required:somebody/)
+        expect(err.message).to.match(/Required:.+somebody/)
         expect(err.message).to.match(/Actual:suppliedbody/)
         stub()
       }).then(function() {
