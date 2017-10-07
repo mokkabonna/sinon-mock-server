@@ -136,3 +136,12 @@ resolves(statusCode, responseBody, responseHeaders)
 If the body is an array or an object it will automatically be serialized to JSON and the header `content-type: application/json; charset=utf-8` will be set, unless the content-type header is already present in the responseHeaders.
 
 For incoming requests the request body is parsed to JSON if the content-type in the request headers contains `application/json`.
+
+
+## Contributing
+
+Create tests for new functionality and follow the eslint rules.
+
+## License
+
+MIT © [Martin Hansen](http://martinhansen.com)

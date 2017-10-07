@@ -23,7 +23,7 @@
     "testing"
   ],
   "author": "Martin Hansen",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mokkabonna/sinon-mock-server/issues"
   },
