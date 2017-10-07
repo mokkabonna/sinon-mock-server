@@ -1,6 +1,6 @@
 {
   "name": "sinon-mock-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Better fake mock server for sinon",
   "main": "lib/index.js",
   "directories": {
