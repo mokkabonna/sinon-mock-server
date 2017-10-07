@@ -34,7 +34,7 @@ describe('api test', function() {
     }]
 
     beforeEach(function() {
-      endpoint.resolve(200, books)
+      endpoint.resolves(200, books)
       return fetchPromise
     })
 
@@ -45,7 +45,7 @@ describe('api test', function() {
 
   describe('when server fails', function() {
     beforeEach(function() {
-      endpoint.reject(500, {})
+      endpoint.rejects(500, {})
       return fetchPromise.catch(function () {
         //silence, fail is expected
       })

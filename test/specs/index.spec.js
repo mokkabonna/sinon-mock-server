@@ -15,7 +15,7 @@ describe('createServer', function() {
   })
 
   it('supports any method', function() {
-    server.any('/').resolve(200, {
+    server.any('/').resolves(200, {
       test: 5
     })
 
@@ -27,7 +27,7 @@ describe('createServer', function() {
   })
 
   it('supports strict matching', function() {
-    server.any.strict('/').resolve(200, {
+    server.any.strict('/').resolves(200, {
       test: 5
     })
 
@@ -41,7 +41,7 @@ describe('createServer', function() {
   })
 
   it('supports matching on regexp', function() {
-    server.use('*', /.*/).resolve(200, {
+    server.use('*', /.*/).resolves(200, {
       test: 5
     })
 
@@ -53,11 +53,11 @@ describe('createServer', function() {
   })
 
   it('maches in correct order, first register, first respond', function() {
-    server.use('*', /.*/).resolve(200, {
+    server.use('*', /.*/).resolves(200, {
       test: 5
     })
 
-    server.use('*', /.*/).resolve(200, {
+    server.use('*', /.*/).resolves(200, {
       test: 7
     })
 
@@ -69,7 +69,7 @@ describe('createServer', function() {
   })
 
   it('works with query params', function() {
-    server.use('*', '/test?foo=3').resolve(200, {
+    server.use('*', '/test?foo=3').resolves(200, {
       test: 7
     })
 
@@ -82,7 +82,7 @@ describe('createServer', function() {
 
   describe('get', function() {
     it('registers a handler for a GET request', function() {
-      server.get('/api/test').resolve(200, {
+      server.get('/api/test').resolves(200, {
         test: 5
       })
 
@@ -95,7 +95,7 @@ describe('createServer', function() {
     })
 
     it('sets json content type header if json', function() {
-      server.get('/api/test').resolve(200, {
+      server.get('/api/test').resolves(200, {
         test: 5
       })
 
@@ -105,7 +105,7 @@ describe('createServer', function() {
     })
 
     it('does not set content-type json if not object', function() {
-      server.get('/api/test').resolve(200, 'some string')
+      server.get('/api/test').resolves(200, 'some string')
 
       return axios.get('/api/test').then(function(response) {
         expect(response.data).to.eql('some string')
@@ -114,7 +114,7 @@ describe('createServer', function() {
     })
 
     it('does not set content-type json if content type set explicit', function() {
-      server.get('/api/test').resolve(200, {}, {
+      server.get('/api/test').resolves(200, {}, {
         'content-type': 'foo'
       })
 
@@ -129,7 +129,7 @@ describe('createServer', function() {
       server.post('/api/test', null, {
         accept: sinon.match('json'),
         'content-type': sinon.match('application/json')
-      }).resolve(201, {})
+      }).resolves(201, {})
 
       return axios.post('/api/test', {}).then(function(response) {
         expect(response.data).to.eql({})
@@ -141,7 +141,7 @@ describe('createServer', function() {
     it('matches incoming body', function() {
       server.post('/api/test', {
         requiredBodyParam: 3
-      }).resolve(201, {})
+      }).resolves(201, {})
 
       return axios.post('/api/test', {
         requiredBodyParam: 3
@@ -151,7 +151,7 @@ describe('createServer', function() {
     })
 
     it('matches strictly incoming body as string', function() {
-      server.post('/api/test', 'somebody').resolve(201, {})
+      server.post('/api/test', 'somebody').resolves(201, {})
 
       var stub = sinon.stub()
 
@@ -172,7 +172,7 @@ describe('createServer', function() {
       var suppliedBody = {
         suppliedParam: 3
       }
-      server.post('/api/test', requiredBody).resolve(201, {})
+      server.post('/api/test', requiredBody).resolves(201, {})
 
       var stub = sinon.stub()
 
@@ -188,7 +188,7 @@ describe('createServer', function() {
     })
 
     it('call stub async', function(done) {
-      var endpoint = server.get('/api/test').resolve(201, {})
+      var endpoint = server.get('/api/test').resolves(201, {})
 
       axios.get('/api/test')
 
@@ -201,7 +201,7 @@ describe('createServer', function() {
     it('support sinon matchers on body', function() {
       server.post('/api/test', sinon.match({
         requiredBodyParam: 3
-      })).resolve(201, {})
+      })).resolves(201, {})
 
       return axios.post('/api/test', {
         requiredBodyParam: 3,
