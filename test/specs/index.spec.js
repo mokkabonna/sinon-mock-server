@@ -26,6 +26,18 @@ describe('createServer', function() {
     })
   })
 
+  it('works for cross domain', function() {
+    server.get.strict('http://example.com/foo').resolves(200, {
+      test: 5
+    })
+
+    return axios.get('http://example.com/foo').then(function(response) {
+      expect(response.data).to.eql({
+        test: 5
+      })
+    })
+  })
+
   it('supports null body as sinon.match.any', function() {
     server.any('/', null, {
       accept: sinon.match('json')
