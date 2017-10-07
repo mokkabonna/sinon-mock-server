@@ -6,9 +6,13 @@ module.exports = function(config) {
     ],
     browsers: ['PhantomJS'],
     frameworks: ['mocha', 'sinon-chai'],
-    reporters: ['spec'],
+    reporters: ['spec', 'coverage'],
     preprocessors: {
-      'test/index.js': ['webpack']
+      'test/index.js': ['webpack', 'coverage']
+    },
+    coverageReporter: {
+      type: 'lcov',
+      dir: 'coverage/'
     }
   })
 }
