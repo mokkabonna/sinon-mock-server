@@ -130,6 +130,8 @@ describe('createServer', function() {
     })
   })
 
+  it('does not fail if called response twice, xhr should be removed from queue')
+
   describe('resolves', function() {
     it('supports body only', function() {
       var body = {
