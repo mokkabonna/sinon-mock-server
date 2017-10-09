@@ -107,6 +107,28 @@ describe('createServer', function() {
       })
     })
   })
+  
+  it('resolves if resolves is called after the call', function() {
+    var endpoint = server.get('/')
+    
+    var success = sinon.stub()
+    var failure = sinon.stub()
+    var request = axios.get('/').then(function functionName(response) {
+      success()
+      return response
+    }, failure)
+    
+    //axios does the request async, so wait a little
+    setTimeout(function () {
+      endpoint.resolves({foo: 3})
+    }, 10)
+    
+    return request.then(function (result) {
+      sinon.assert.calledOnce(success)
+      sinon.assert.notCalled(failure)
+      expect(result.data).to.eql({foo: 3})
+    })
+  })
 
   describe('resolves', function() {
     it('supports body only', function() {
